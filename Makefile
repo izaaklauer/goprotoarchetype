@@ -11,7 +11,7 @@ proto/lint: # Lint protobufs
 	buf lint .
 
 .PHONY: proto/generate
-proto/compile: # Compile protobufs
+proto/generate: # Compile protobufs
 	rm -rf ./gen
 	buf generate
 
