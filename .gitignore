@@ -1,0 +1,14 @@
+bin/
+tmp/
+
+# Repo-specific
+/goprotoarchetype 
+
+# System-specific
+.DS_Store
+
+# .vscode - We intentionally commit .vscode in order to share project-specific settings
+.vscode/*log
+
+.idea
+
