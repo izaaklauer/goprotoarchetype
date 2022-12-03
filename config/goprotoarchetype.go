@@ -5,3 +5,10 @@ type Goprotoarchetype struct {
 
 	// ... your config here
 }
+
+// DefaultGoprotoarchetypeConfig returns default config values
+func DefaultGoprotoarchetypeConfig() Goprotoarchetype {
+	return Goprotoarchetype{
+		HelloWorldMessage: "hello from the default config",
+	}
+}

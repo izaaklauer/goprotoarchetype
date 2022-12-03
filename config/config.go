@@ -2,11 +2,13 @@ package config
 
 import "github.com/hashicorp/hcl/v2/hclsimple"
 
+// Config is the top-level config
 type Config struct {
 	Server           Server           `hcl:"server,block"`
 	Goprotoarchetype Goprotoarchetype `hcl:"goprotoarchetype,block"`
 }
 
+// Server is gRPC server related config
 type Server struct {
 	BindAddr string `hcl:"bind_addr,attr"`
 }
@@ -17,4 +19,14 @@ func GetConfig(path string) (Config, error) {
 	err := hclsimple.DecodeFile(path, nil, &config)
 
 	return config, err
+}
+
+// DefaultConfig returns default config
+func DefaultConfig() Config {
+	return Config{
+		Server: Server{
+			BindAddr: ":8080",
+		},
+		Goprotoarchetype: DefaultGoprotoarchetypeConfig(),
+	}
 }

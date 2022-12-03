@@ -4,7 +4,7 @@ start: # When you first clone the repo, start here!
 
 .PHONY: serve
 serve: # Runs the server for local development
-	go run cmd/goprotoarchetype-api/main.go config/config_local.hcl
+	CONFIG_PATH=config/config_local.hcl go run cmd/goprotoarchetype-api/main.go
 
 .PHONY: proto/lint
 proto/lint: # Lint protobufs

@@ -18,5 +18,4 @@ func TestGetConfig(t *testing.T) {
 
 		// Add more app-specific config property checks here if desired.
 	})
-
 }

@@ -20,39 +20,43 @@ func main() {
 
 	err := serve()
 	if err != nil {
-		log.Fatal("failed serving", err)
+		log.Fatalf("failed serving\n%s", err)
 	}
 }
 
 func serve() error {
-	if len(os.Args) != 2 {
-		fmt.Printf("usage: %s config.hcl", os.Args[0])
-		os.Exit(1)
-	}
+	var c config.Config
 
-	configPath := os.Args[1]
+	configPath := os.Getenv("CONFIG_PATH")
+	if configPath != "" {
+		var err error
+		c, err = config.GetConfig(configPath)
+		if err != nil {
+			return errors.Wrapf(err, "failed to load config from %q", configPath)
+		}
+	} else {
+		// Erroring on no config would be totally valid
+		// return errors.New("Environment variable CONFIG_PATH is unset")
 
-	config, err := config.GetConfig(configPath)
-	if err != nil {
-		return errors.Wrapf(err, "failed to load config from %q", configPath)
+		c = config.DefaultConfig()
 	}
 
 	// Start the service
-	goprotoarchetypeServer, err := server.NewGoprotoarchetypeServer(config.Goprotoarchetype)
+	goprotoarchetypeServer, err := server.NewGoprotoarchetypeServer(c.Goprotoarchetype)
 	if err != nil {
 		return errors.Wrapf(err, "failed to start goprotoarchetype server")
 	}
 
-	listener, err := net.Listen("tcp", config.Server.BindAddr)
+	listener, err := net.Listen("tcp", c.Server.BindAddr)
 	if err != nil {
-		return errors.Wrapf(err, "failed to listen on %s", config.Server.BindAddr)
+		return errors.Wrapf(err, "failed to listen on %s", c.Server.BindAddr)
 	}
 	grpcServer := grpc.NewServer()
 
 	goprotoarchetypev1.RegisterGoprotoarchetypeServiceServer(grpcServer, goprotoarchetypeServer)
 	reflection.Register(grpcServer)
 
-	log.Printf("Serving on %q", config.Server.BindAddr)
+	log.Printf("Serving on %q", c.Server.BindAddr)
 	if err := grpcServer.Serve(listener); err != nil {
 		return errors.Wrapf(err, "gRPC server exited")
 	}

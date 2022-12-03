@@ -1,7 +1,7 @@
 # A sample local config file
 
 server {
-  bind_addr = "localhost:8080"
+  bind_addr = ":8080"
 }
 
 goprotoarchetype {
